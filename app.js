@@ -439,17 +439,8 @@ document.getElementById('edit-desc').addEventListener('input', updateDescCount);
 
 // ── INIT ──────────────────────────────────────────────────────
 function init() {
-  // Carrega estado salvo (se houver) antes de renderizar
-  try {
-    const raw = localStorage.getItem('linkfolio');
-    if (raw) {
-      const saved = JSON.parse(raw);
-      if (saved && typeof saved === 'object') {
-        if (saved.profile) state.profile = { ...state.profile, ...saved.profile };
-        if (Array.isArray(saved.links)) state.links = saved.links.map(l => ({ ...l }));
-      }
-    }
-  } catch (e) {}
+  // Limpa qualquer dado antigo salvo no navegador
+  try { localStorage.removeItem('linkfolio'); } catch {}
 
   applyTheme(state.profile.theme || 'dark');
   document.querySelectorAll('.theme-card').forEach(b => {
