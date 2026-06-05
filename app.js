@@ -2,6 +2,18 @@
    LINKFÓLIO — app.js
    ============================ */
 
+// ── UTILS (deve vir PRIMEIRO) ─────────────────────────────────
+function uid() { return Math.random().toString(36).slice(2, 10); }
+function isValidUrl(url) {
+  try { return ['http:', 'https:'].includes(new URL(url.trim()).protocol); }
+  catch { return false; }
+}
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
 // ── DEFAULT DATA ──────────────────────────────────────────────
 const DEFAULT_PROFILE = {
   name: 'Pwdrinho',
@@ -11,7 +23,7 @@ const DEFAULT_PROFILE = {
 };
 
 const DEFAULT_LINKS = [
-  { id: uid(), icon: 'fa-brands fa-github', name: 'GitHub', url: 'www.linkedin.com/in/pwdrinho' },
+  { id: uid(), icon: 'fa-brands fa-github',   name: 'GitHub',   url: 'https://github.com/pwdrinho' },
   { id: uid(), icon: 'fa-brands fa-linkedin', name: 'LinkedIn', url: 'https://www.linkedin.com/in/pwdrinho/' },
 ];
 
@@ -61,34 +73,16 @@ const ICONS = [
 // ── STATE ─────────────────────────────────────────────────────
 let state = {
   profile: { ...DEFAULT_PROFILE },
-  links: [...DEFAULT_LINKS],
+  links: DEFAULT_LINKS.map(l => ({ ...l })),
 };
 
 let editingLinkId = null;
-let activeIconTarget = null; // 'new' or 'edit'
+let activeIconTarget = null;
 let dragSrcIndex = null;
 
 // ── STORAGE ───────────────────────────────────────────────────
 function save() {
   try { localStorage.setItem('linkfolio', JSON.stringify(state)); } catch {}
-}
-function load() {
-  try {
-    const raw = localStorage.getItem('linkfolio');
-    if (raw) state = JSON.parse(raw);
-  } catch {}
-}
-
-// ── UTILS ─────────────────────────────────────────────────────
-function uid() { return Math.random().toString(36).slice(2, 10); }
-function isValidUrl(url) {
-  try { return ['http:', 'https:'].includes(new URL(url.trim()).protocol); }
-  catch { return false; }
-}
-function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
 }
 
 // ── RENDER: PUBLIC VIEW ───────────────────────────────────────
@@ -156,7 +150,6 @@ function renderEditLinks() {
     </li>
   `).join('');
 
-  // Drag-and-drop events
   list.querySelectorAll('.edit-link-item').forEach(item => {
     item.addEventListener('dragstart', onDragStart);
     item.addEventListener('dragover', onDragOver);
@@ -262,7 +255,6 @@ document.getElementById('add-link-btn').addEventListener('click', () => {
   state.links.push({ id: uid(), icon, name, url });
   save(); renderEditLinks(); renderPublic();
 
-  // Reset form
   document.getElementById('new-link-name').value = '';
   document.getElementById('new-link-url').value = '';
   document.getElementById('new-link-icon').value = 'fa-solid fa-link';
@@ -355,7 +347,6 @@ document.getElementById('close-icon-picker').addEventListener('click', () => {
   document.getElementById('open-icon-picker').setAttribute('aria-expanded', 'false');
 });
 
-// Close modals on backdrop click
 document.getElementById('icon-picker-modal').addEventListener('click', function(e) {
   if (e.target === this) this.hidden = true;
 });
@@ -363,7 +354,6 @@ document.getElementById('edit-link-modal').addEventListener('click', function(e)
   if (e.target === this) this.hidden = true;
 });
 
-// Close modals on Escape
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.getElementById('icon-picker-modal').hidden = true;
@@ -386,7 +376,6 @@ document.querySelectorAll('.theme-card').forEach(btn => {
 });
 
 function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme === 'dark' ? '' : theme);
   if (theme === 'dark') document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme', theme);
 }
@@ -443,7 +432,6 @@ document.getElementById('edit-desc').addEventListener('input', updateDescCount);
 // ── INIT ──────────────────────────────────────────────────────
 function init() {
   applyTheme(state.profile.theme || 'dark');
-  // Sync theme cards
   document.querySelectorAll('.theme-card').forEach(b => {
     const active = b.dataset.theme === (state.profile.theme || 'dark');
     b.classList.toggle('active', active);
