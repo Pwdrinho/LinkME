@@ -91,6 +91,11 @@ function renderPublic() {
 
   const avatar = document.getElementById('pub-avatar');
   avatar.src = profile.avatar || generateAvatarSvg(profile.name);
+  // fallback: se a imagem não carregar, exibe o avatar gerado
+  avatar.onerror = () => {
+    avatar.onerror = null;
+    avatar.src = generateAvatarSvg(profile.name);
+  };
   avatar.alt = `Foto de perfil de ${profile.name}`;
 
   document.getElementById('pub-name').textContent = profile.name || 'Seu Nome';
@@ -381,12 +386,15 @@ function applyTheme(theme) {
 }
 
 // ── VIEW SWITCHING ────────────────────────────────────────────
-document.getElementById('open-editor-btn').addEventListener('click', () => {
-  document.getElementById('public-view').classList.remove('active');
-  document.getElementById('editor-view').classList.add('active');
-  syncProfileFormToState();
-  renderEditLinks();
-});
+const openEditorBtn = document.getElementById('open-editor-btn');
+if (openEditorBtn) {
+  openEditorBtn.addEventListener('click', () => {
+    document.getElementById('public-view').classList.remove('active');
+    document.getElementById('editor-view').classList.add('active');
+    syncProfileFormToState();
+    renderEditLinks();
+  });
+}
 document.getElementById('close-editor-btn').addEventListener('click', () => {
   document.getElementById('editor-view').classList.remove('active');
   document.getElementById('public-view').classList.add('active');
@@ -431,6 +439,18 @@ document.getElementById('edit-desc').addEventListener('input', updateDescCount);
 
 // ── INIT ──────────────────────────────────────────────────────
 function init() {
+  // Carrega estado salvo (se houver) antes de renderizar
+  try {
+    const raw = localStorage.getItem('linkfolio');
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (saved && typeof saved === 'object') {
+        if (saved.profile) state.profile = { ...state.profile, ...saved.profile };
+        if (Array.isArray(saved.links)) state.links = saved.links.map(l => ({ ...l }));
+      }
+    }
+  } catch (e) {}
+
   applyTheme(state.profile.theme || 'dark');
   document.querySelectorAll('.theme-card').forEach(b => {
     const active = b.dataset.theme === (state.profile.theme || 'dark');
