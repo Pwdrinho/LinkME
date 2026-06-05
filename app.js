@@ -4,16 +4,15 @@
 
 // ── DEFAULT DATA ──────────────────────────────────────────────
 const DEFAULT_PROFILE = {
-  name: 'Seu Nome',
-  desc: 'Desenvolvedor • Designer • Criador de coisas ✨',
-  avatar: '',
+  name: 'Pwdrinho',
+  desc: 'Desenvolvedor de Software • UI/UX',
+  avatar: 'Bakugo1.jpeg',
   theme: 'dark',
 };
 
 const DEFAULT_LINKS = [
-  { id: uid(), icon: 'fa-brands fa-github', name: 'GitHub', url: 'https://github.com' },
-  { id: uid(), icon: 'fa-brands fa-linkedin', name: 'LinkedIn', url: 'https://linkedin.com' },
-  { id: uid(), icon: 'fa-solid fa-briefcase', name: 'Portfolio', url: 'https://example.com' },
+  { id: uid(), icon: 'fa-brands fa-github', name: 'GitHub', url: 'www.linkedin.com/in/pwdrinho' },
+  { id: uid(), icon: 'fa-brands fa-linkedin', name: 'LinkedIn', url: 'https://www.linkedin.com/in/pwdrinho/' },
 ];
 
 const ICONS = [
@@ -443,7 +442,6 @@ document.getElementById('edit-desc').addEventListener('input', updateDescCount);
 
 // ── INIT ──────────────────────────────────────────────────────
 function init() {
-  load();
   applyTheme(state.profile.theme || 'dark');
   // Sync theme cards
   document.querySelectorAll('.theme-card').forEach(b => {
