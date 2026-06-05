@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Minha página de links" />
+  <title>LinkFólio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======= PUBLIC VIEW ======= -->
+<div id="public-view" class="view active">
+  <div class="grain"></div>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="profile-section">
+      <div class="avatar-wrapper">
+        <img id="pub-avatar" src="" alt="Foto de perfil" class="avatar" />
+        <div class="avatar-ring"></div>
+      </div>
+      <h1 id="pub-name" class="profile-name">Seu Nome</h1>
+      <p id="pub-desc" class="profile-desc">Sua descrição aqui ✨</p>
+    </div>
+
+    <ul id="pub-links" class="links-list" aria-label="Lista de links"></ul>
+
+    <div class="share-section">
+      <button class="share-btn" id="share-btn" aria-label="Compartilhar página">
+        <i class="fa-solid fa-share-nodes"></i>
+        <span>Compartilhar</span>
+      </button>
+      <div id="share-toast" class="toast" role="alert" aria-live="polite"></div>
+    </div>
+
+    <div class="edit-fab-wrapper">
+      <button class="fab" id="open-editor-btn" aria-label="Editar perfil">
+        <i class="fa-solid fa-pen-to-square"></i>
+      </button>
+      <span class="fab-label">Editar</span>
+    </div>
+  </div>
+</div>
+
+<!-- ======= EDITOR VIEW ======= -->
+<div id="editor-view" class="view">
+  <div class="grain"></div>
+  <div class="editor-layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="logo-mark">✦</span>
+        <h2 class="sidebar-title">LinkFólio</h2>
+      </div>
+      <nav class="sidebar-nav" aria-label="Navegação do editor">
+        <button class="nav-btn active" data-panel="profile">
+          <i class="fa-solid fa-circle-user"></i> Perfil
+        </button>
+        <button class="nav-btn" data-panel="links">
+          <i class="fa-solid fa-link"></i> Links
+        </button>
+        <button class="nav-btn" data-panel="appearance">
+          <i class="fa-solid fa-palette"></i> Aparência
+        </button>
+      </nav>
+      <button class="close-editor-btn" id="close-editor-btn" aria-label="Fechar editor">
+        <i class="fa-solid fa-eye"></i> Ver página
+      </button>
+    </aside>
+
+    <main class="editor-main">
+
+      <!-- PROFILE PANEL -->
+      <section id="panel-profile" class="panel active" aria-labelledby="panel-profile-title">
+        <h2 class="panel-title" id="panel-profile-title">Informações do Perfil</h2>
+
+        <div class="avatar-edit-area">
+          <div class="avatar-preview-wrap">
+            <img id="edit-avatar-preview" src="" alt="Preview da foto de perfil" class="avatar-preview" />
+            <button class="avatar-overlay-btn" id="avatar-upload-btn" aria-label="Alterar foto de perfil">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+          <input type="file" id="avatar-file-input" accept="image/*" hidden aria-label="Selecionar imagem de perfil" />
+          <div class="avatar-hint">Clique na foto para alterar · JPG, PNG, GIF</div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-name" class="form-label">Nome</label>
+          <input type="text" id="edit-name" class="form-input" placeholder="Seu nome ou apelido" maxlength="60" aria-required="true" />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-desc" class="form-label">Descrição</label>
+          <textarea id="edit-desc" class="form-input form-textarea" placeholder="Uma frase sobre você, seu trabalho ou projeto..." maxlength="200" rows="3"></textarea>
+          <span class="char-count" id="desc-count">0/200</span>
+        </div>
+
+        <button class="btn-primary" id="save-profile-btn">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar Perfil
+        </button>
+      </section>
+
+      <!-- LINKS PANEL -->
+      <section id="panel-links" class="panel" aria-labelledby="panel-links-title">
+        <h2 class="panel-title" id="panel-links-title">Meus Links</h2>
+
+        <div class="add-link-form card">
+          <h3 class="card-subtitle">Adicionar novo link</h3>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="new-link-name" class="form-label">Nome do link</label>
+              <input type="text" id="new-link-name" class="form-input" placeholder="Ex: GitHub, Portfolio..." maxlength="50" />
+            </div>
+            <div class="form-group icon-pick-group">
+              <label for="new-link-icon" class="form-label">Ícone</label>
+              <div class="icon-picker-wrap">
+                <button class="icon-picker-btn" id="open-icon-picker" aria-haspopup="listbox" aria-expanded="false" aria-label="Selecionar ícone">
+                  <i id="icon-preview" class="fa-solid fa-link"></i>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <input type="hidden" id="new-link-icon" value="fa-solid fa-link" />
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="new-link-url" class="form-label">URL</label>
+            <div class="url-input-wrap">
+              <input type="url" id="new-link-url" class="form-input" placeholder="https://..." />
+              <span class="url-status" id="url-status" aria-live="polite"></span>
+            </div>
+          </div>
+          <button class="btn-primary" id="add-link-btn">
+            <i class="fa-solid fa-plus"></i> Adicionar Link
+          </button>
+        </div>
+
+        <div id="links-manager" class="links-manager">
+          <h3 class="card-subtitle" style="margin-bottom:12px;">Seus links <span id="link-count-badge" class="badge">0</span></h3>
+          <p class="drag-hint"><i class="fa-solid fa-grip-lines"></i> Arraste para reordenar</p>
+          <ul id="edit-links-list" class="edit-links-list" aria-label="Links cadastrados"></ul>
+          <p id="empty-links-msg" class="empty-msg">Nenhum link adicionado ainda.</p>
+        </div>
+      </section>
+
+      <!-- APPEARANCE PANEL -->
+      <section id="panel-appearance" class="panel" aria-labelledby="panel-appearance-title">
+        <h2 class="panel-title" id="panel-appearance-title">Aparência</h2>
+        <div class="theme-grid">
+          <button class="theme-card active" data-theme="dark" aria-pressed="true">
+            <div class="theme-preview theme-preview--dark"></div>
+            <span>Dark Neon</span>
+          </button>
+          <button class="theme-card" data-theme="light" aria-pressed="false">
+            <div class="theme-preview theme-preview--light"></div>
+            <span>Light Clay</span>
+          </button>
+          <button class="theme-card" data-theme="warm" aria-pressed="false">
+            <div class="theme-preview theme-preview--warm"></div>
+            <span>Warm Dusk</span>
+          </button>
+          <button class="theme-card" data-theme="ocean" aria-pressed="false">
+            <div class="theme-preview theme-preview--ocean"></div>
+            <span>Ocean Depth</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ======= ICON PICKER MODAL ======= -->
+<div id="icon-picker-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Selecionar ícone" hidden>
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Escolha um ícone</h3>
+      <button class="modal-close" id="close-icon-picker" aria-label="Fechar">×</button>
+    </div>
+    <div class="icon-grid" id="icon-grid" role="listbox" aria-label="Ícones disponíveis"></div>
+  </div>
+</div>
+
+<!-- ======= EDIT LINK MODAL ======= -->
+<div id="edit-link-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Editar link" hidden>
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Editar Link</h3>
+      <button class="modal-close" id="close-edit-link" aria-label="Fechar">×</button>
+    </div>
+    <div class="form-group">
+      <label for="edit-link-name" class="form-label">Nome</label>
+      <input type="text" id="edit-link-name" class="form-input" maxlength="50" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ícone</label>
+      <div class="icon-picker-wrap">
+        <button class="icon-picker-btn" id="open-edit-icon-picker" aria-haspopup="listbox">
+          <i id="edit-icon-preview" class="fa-solid fa-link"></i>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <input type="hidden" id="edit-link-icon" value="fa-solid fa-link" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="edit-link-url" class="form-label">URL</label>
+      <input type="url" id="edit-link-url" class="form-input" placeholder="https://..." />
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancel-edit-link">Cancelar</button>
+      <button class="btn-primary" id="save-edit-link"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
